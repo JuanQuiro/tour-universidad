@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mi Tour Panorámico</title>
+    <title>Unitec Tour Virtual</title>
     <!-- Pannellum CSS -->
     <link rel="stylesheet" href="src/css/pannellum.css" />
     <style>
@@ -20,27 +20,24 @@
         overflow: hidden;
         font-family: sans-serif;
       }
-      /* Contenedor del logo, siempre encima del panorama */
-
+      /* Contenedor del logo */
       #logo-container {
         position: absolute;
-        top: 1rem; /* separarlo un poco del borde */
-        right: 1rem; /* esquina superior izquierda */
-        z-index: 1000; /* por encima del panorama */
-        padding: 0.25rem; /* pequeño acolchado */
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+        padding: 0.25rem;
       }
-
       #logo-container img {
-        height: 2.5rem; /* unos 40px de alto */
+        height: 2.5rem;
         width: auto;
-        opacity: 0.8; /* ligera transparencia */
+        opacity: 0.8;
         transition: opacity 0.2s ease-in-out;
       }
       #logo-container img:hover {
-        opacity: 1; /* visible al pasar el ratón */
+        opacity: 1;
       }
-
-      /* Contenedor del panorama ocupa toda la pantalla */
+      /* Contenedor del panorama */
       #panorama {
         width: 100%;
         height: 100%;
@@ -48,46 +45,169 @@
     </style>
   </head>
   <body>
-    <!-- Logo de tu institución -->
+    <!-- Logo Institucional -->
     <div id="logo-container">
       <img src="imagenes/logo-institucion.png" alt="Logo Institucional" />
     </div>
 
-    <!-- Visor de Pannellum -->
+    <!-- Visor Pannellum -->
     <div id="panorama"></div>
 
+    <!-- Pannellum JS -->
     <script src="src/js/libpannellum.js"></script>
     <script src="src/js/pannellum.js"></script>
     <script>
       pannellum.viewer("panorama", {
         default: {
           firstScene: "entrada",
-          sceneFadeDuration: 500,
+          sceneFadeDuration: 700,
           autoLoad: true,
+          haov: 360,
+          vaov: 80,
+          vOffset: 0,
+          minPitch: -50,
+          maxPitch: 90,
+          showCoords: true,
+          coordRipple: false,
+          hotSpotDebug: true,
         },
         scenes: {
           entrada: {
             type: "equirectangular",
-            panorama: "imagenes/oficina2.jpeg",
-            haov: 360, // giro horizontal completo
-            vaov: 80, // franja vertical mínima
-            vOffset: 0, // horizonte centrado
-            // Bloqueo total de movimiento vertical
-            minPitch: 0,
-            maxPitch: 0,
+            panorama: "imagenes/9.jpeg",
+            title: "Entrada Principal",
+            hfov: 100,
             hotSpots: [
               {
-                pitch: 2.1,
-                yaw: 110.5,
+                pitch: -9.65175906832065,
+                yaw: -39,
                 type: "scene",
-                text: "Sala principal",
-                sceneId: "sala",
+                text: "Casa Del Estudiante",
+                sceneId: "punto",
               },
             ],
           },
-          sala: {
+          sala_estudiantes: {
             type: "equirectangular",
-            panorama: "imagenes/pano-sala.jpg",
+            panorama: "imagenes/sala_estudiantes.jpg",
+            title: "Sala de Estudiantes",
+            hotSpots: [
+              {
+                pitch: 5,
+                yaw: 200,
+                type: "scene",
+                text: "Laboratorio de Cómputo",
+                sceneId: "laboratorio",
+              },
+              {
+                pitch: -3,
+                yaw: 10,
+                type: "scene",
+                text: "Entrada Principal",
+                sceneId: "entrada",
+              },
+            ],
+          },
+          biblioteca: {
+            type: "equirectangular",
+            panorama: "imagenes/biblioteca.jpg",
+            title: "Biblioteca",
+            hotSpots: [
+              {
+                pitch: 1,
+                yaw: 95,
+                type: "scene",
+                text: "Auditorio",
+                sceneId: "auditorio",
+              },
+              {
+                pitch: -4,
+                yaw: -50,
+                type: "scene",
+                text: "Entrada Principal",
+                sceneId: "entrada",
+              },
+            ],
+          },
+          cafeteria: {
+            type: "equirectangular",
+            panorama: "imagenes/cafeteria.jpg",
+            title: "Cafetería",
+            hotSpots: [
+              {
+                pitch: 3,
+                yaw: 170,
+                type: "scene",
+                text: "Gimnasio",
+                sceneId: "gimnasio",
+              },
+              {
+                pitch: -2,
+                yaw: -135,
+                type: "scene",
+                text: "Entrada Principal",
+                sceneId: "entrada",
+              },
+            ],
+          },
+          laboratorio: {
+            type: "equirectangular",
+            panorama: "imagenes/laboratorio.jpg",
+            title: "Laboratorio de Cómputo",
+            hotSpots: [
+              {
+                pitch: 0,
+                yaw: -100,
+                type: "scene",
+                text: "Sala de Estudiantes",
+                sceneId: "sala_estudiantes",
+              },
+            ],
+          },
+          auditorio: {
+            type: "equirectangular",
+            panorama: "imagenes/auditorio.jpg",
+            title: "Auditorio",
+            hotSpots: [
+              {
+                pitch: 2,
+                yaw: 180,
+                type: "scene",
+                text: "Biblioteca",
+                sceneId: "biblioteca",
+              },
+            ],
+          },
+          gimnasio: {
+            type: "equirectangular",
+            panorama: "imagenes/gimnasio.jpg",
+            title: "Gimnasio",
+            hotSpots: [
+              {
+                pitch: -1,
+                yaw: 30,
+                type: "scene",
+                text: "Cafetería",
+                sceneId: "cafeteria",
+              },
+            ],
+          },
+          punto: {
+            type: "equirectangular",
+            panorama: "imagenes/punto.jpg",
+            title: "Punto Especial",
+            pitch: -10.923016289130935,
+            yaw: -37.74602071551823,
+            hfov: 100,
+            hotSpots: [
+              {
+                pitch: 2,
+                yaw: 45,
+                type: "scene",
+                text: "Volver a Entrada",
+                sceneId: "entrada",
+              },
+            ],
           },
         },
       });
