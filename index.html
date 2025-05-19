@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mi Tour Panorámico</title>
+    <!-- Pannellum CSS -->
+    <link rel="stylesheet" href="src/css/pannellum.css" />
+    <style>
+      /* Reset básico */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        font-family: sans-serif;
+      }
+      /* Contenedor del logo, siempre encima del panorama */
+
+      #logo-container {
+        position: absolute;
+        top: 1rem; /* separarlo un poco del borde */
+        right: 1rem; /* esquina superior izquierda */
+        z-index: 1000; /* por encima del panorama */
+        padding: 0.25rem; /* pequeño acolchado */
+      }
+
+      #logo-container img {
+        height: 2.5rem; /* unos 40px de alto */
+        width: auto;
+        opacity: 0.8; /* ligera transparencia */
+        transition: opacity 0.2s ease-in-out;
+      }
+      #logo-container img:hover {
+        opacity: 1; /* visible al pasar el ratón */
+      }
+
+      /* Contenedor del panorama ocupa toda la pantalla */
+      #panorama {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Logo de tu institución -->
+    <div id="logo-container">
+      <img src="imagenes/logo-institucion.png" alt="Logo Institucional" />
+    </div>
+
+    <!-- Visor de Pannellum -->
+    <div id="panorama"></div>
+
+    <script src="src/js/libpannellum.js"></script>
+    <script src="src/js/pannellum.js"></script>
+    <script>
+      pannellum.viewer("panorama", {
+        default: {
+          firstScene: "entrada",
+          sceneFadeDuration: 500,
+          autoLoad: true,
+        },
+        scenes: {
+          entrada: {
+            type: "equirectangular",
+            panorama: "imagenes/oficina2.jpeg",
+            haov: 360, // giro horizontal completo
+            vaov: 80, // franja vertical mínima
+            vOffset: 0, // horizonte centrado
+            // Bloqueo total de movimiento vertical
+            minPitch: 0,
+            maxPitch: 0,
+            hotSpots: [
+              {
+                pitch: 2.1,
+                yaw: 110.5,
+                type: "scene",
+                text: "Sala principal",
+                sceneId: "sala",
+              },
+            ],
+          },
+          sala: {
+            type: "equirectangular",
+            panorama: "imagenes/pano-sala.jpg",
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
