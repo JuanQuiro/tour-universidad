@@ -5,136 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Unitec Tour Virtual</title>
     <link rel="stylesheet" href="src/css/pannellum.css" />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      html,
-      body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        font-family: sans-serif;
-      }
-      #logo-container {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        z-index: 1000;
-        padding: 0.25rem;
-      }
-      #logo-container img {
-        height: 2.5rem;
-        width: auto;
-        opacity: 0.8;
-        transition: opacity 0.2s;
-      }
-      #logo-container img:hover {
-        opacity: 1;
-      }
-      #panorama {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
+    <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <div id="logo-container">
       <img src="imagenes/logo-institucion.png" alt="Logo Institucional" />
     </div>
     <div id="panorama"></div>
+
+    <!-- Scripts de la librería -->
     <script src="src/js/libpannellum.js"></script>
     <script src="src/js/pannellum.js"></script>
+
+    <!-- Scripts de las escenas -->
+    <script src="scenes/entrada.js"></script>
+    <script src="scenes/sala_estudiantes.js"></script>
+    <script src="scenes/casadelestudiante.js"></script>
+    <script src="scenes/casaDelestudiantesofa.js"></script>
+    <script src="scenes/laboratorio.js"></script>
+    <script src="scenes/casaDelEstudianteCafetin.js"></script>
+    <script src="scenes/index.js"></script>
+
+    <!-- Configuración y inicialización -->
+    <script src="js/config.js"></script>
     <script>
-      pannellum.viewer("panorama", {
-        default: {
-          firstScene: "entrada",
-          sceneFadeDuration: 700,
-          autoLoad: true,
-          haov: 360,
-          vaov: 80,
-          minPitch: -50,
-          maxPitch: 90,
-          showCoords: true,
-          coordRipple: false,
-          hotSpotDebug: true,
-        },
-        scenes: {
-          entrada: {
-            type: "equirectangular",
-            panorama: "imagenes/9.jpeg",
-            title: "Entrada Principal",
-            hfov: 100,
-            hotSpots: [
-              {
-                pitch: -9,
-                yaw: -39,
-                type: "scene",
-                text: "Casa del Estudiante",
-                sceneId: "punto",
-              },
-              {
-                pitch: 2,
-                yaw: 45,
-                type: "scene",
-                text: "Sala de Estudiantes",
-                sceneId: "sala_estudiantes",
-              },
-            ],
-          },
-          sala_estudiantes: {
-            type: "equirectangular",
-            panorama: "imagenes/sala_estudiantes.jpg",
-            title: "Sala de Estudiantes",
-            hotSpots: [
-              {
-                pitch: -3,
-                yaw: 10,
-                type: "scene",
-                text: "Entrada Principal",
-                sceneId: "entrada",
-              },
-              {
-                pitch: 5,
-                yaw: 200,
-                type: "scene",
-                text: "Casa del Estudiante",
-                sceneId: "punto",
-              },
-            ],
-          },
-          punto: {
-            type: "equirectangular",
-            panorama: "imagenes/entrada_casadelestudiante.jpeg",
-            title: "Casa del Estudiante",
-            hotSpots: [
-              {
-                pitch: 2,
-                yaw: 45,
-                type: "scene",
-                text: "Volver a Entrada",
-                sceneId: "entrada",
-              },
-            ],
-          },
-          laboratorio: {
-            type: "equirectangular",
-            panorama: "imagenes/laboratorio.jpg",
-            title: "CASA",
-            hotSpots: [
-              {
-                pitch: 0,
-                yaw: -100,
-                type: "scene",
-                text: "Sala de Estudiantes",
-                sceneId: "sala_estudiantes",
-              },
-            ],
-          },
-        },
-      });
+      // Inicializar el visor
+      pannellum.viewer("panorama", tourConfig);
     </script>
   </body>
 </html>
