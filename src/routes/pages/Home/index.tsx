@@ -106,7 +106,7 @@ const Home = () => {
         ))}
       </div>
 
-      <div className="central-logo">
+      <div className="central-logo xs:mt-5 mt-5 xl:mt-0">
         <h1>UNITEC</h1>
         <span>Universidad Tecnológica del Centro</span>
       </div>
