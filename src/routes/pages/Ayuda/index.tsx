@@ -57,44 +57,125 @@ const Ayuda = () => {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
+  // Efecto para manejar el scroll y la navegación por hash
   useEffect(() => {
-    // Extraer el ID de la sección del hash de la URL
-    const hash = location.hash.replace('#', '')
-    if (hash) {
-      setActiveSection(hash)
-      const element = document.getElementById(hash)
-      if (element) {
-        const yOffset = -80
-        const y =
-          element.getBoundingClientRect().top + window.pageYOffset + yOffset
-        window.scrollTo({ top: y, behavior: 'smooth' })
+    let isMounted = true;
+    let scrollTimeout: NodeJS.Timeout;
+    let isScrolling = false;
+
+    const scrollToSection = (sectionId: string, behavior: ScrollBehavior = 'smooth', isInitialLoad = false) => {
+      return new Promise<void>((resolve) => {
+        // Pequeño retraso para asegurar que el DOM esté listo
+        setTimeout(() => {
+          if (!isMounted) return resolve();
+          
+          const element = document.getElementById(sectionId);
+          if (!element) return resolve();
+
+          // Calcular posición con un pequeño offset
+          const headerOffset = -20;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.scrollY + headerOffset;
+          
+          isScrolling = true;
+          
+          if (isInitialLoad) {
+            // Para la carga inicial, usar scrollTo inmediatamente
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'auto'
+            });
+            // Forzar un repintado
+            setTimeout(() => {
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'auto'
+              });
+              isScrolling = false;
+              resolve();
+            }, 50);
+          } else {
+            // Para navegaciones posteriores, usar smooth scroll
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: behavior
+            });
+            setTimeout(() => {
+              isScrolling = false;
+              resolve();
+            }, 800);
+          }
+        }, isInitialLoad ? 100 : 0); // Mayor retraso para la carga inicial
+      });
+    };
+
+    const handleHashNavigation = async (initialLoad = false) => {
+      if (isScrolling && !initialLoad) return;
+      
+      const hash = location.hash.replace('#', '');
+      const targetSection = hash || 'edificio-principal';
+      
+      if (isMounted) {
+        setActiveSection(targetSection);
       }
-    } else {
-      setActiveSection('edificio-principal')
-    }
-  }, [location])
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll('.content-section')
-      let currentSection = ''
-
-      sections.forEach((section) => {
-        const sectionTop = section.getBoundingClientRect().top
-        if (sectionTop <= 100) {
-          currentSection = section.id
+      if (initialLoad) {
+        // Esperar a que el DOM esté completamente cargado
+        if (document.readyState === 'complete') {
+          await scrollToSection(targetSection, 'auto', true);
+        } else {
+          window.addEventListener('load', () => {
+            scrollToSection(targetSection, 'auto', true);
+          }, { once: true });
         }
-      })
-
-      if (currentSection !== '' && currentSection !== activeSection) {
-        setActiveSection(currentSection)
-        window.history.replaceState(null, '', `#${currentSection}`)
+      } else if (hash) {
+        await scrollToSection(hash);
       }
-    }
+    };
 
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [activeSection])
+    const handleScroll = () => {
+      if (isScrolling) return;
+      
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (!isMounted || isScrolling) return;
+        
+        const sections = document.querySelectorAll('.content-section');
+        let currentSection = '';
+        const offset = 100;
+
+        sections.forEach((section) => {
+          const sectionTop = section.getBoundingClientRect().top;
+          if (sectionTop <= offset + 100) {
+            currentSection = section.id;
+          }
+        });
+
+        if (currentSection && currentSection !== activeSection) {
+          setActiveSection(currentSection);
+          // Solo actualizar la URL si es diferente a la actual
+          if (`#${currentSection}` !== location.hash) {
+            window.history.replaceState(null, '', `#${currentSection}`);
+          }
+        }
+      }, 100);
+    };
+
+    // Manejar la navegación inicial
+    handleHashNavigation(true);
+    
+    // Agregar listeners
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('hashchange', () => handleHashNavigation(false));
+
+    // Limpieza
+    return () => {
+      isMounted = false;
+      clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('hashchange', () => handleHashNavigation(false));
+    };
+  }, [location]); // Eliminamos activeSection de las dependencias
 
   const handleNavigation = (sectionId: string) => {
     const element = document.getElementById(sectionId)

@@ -1,19 +1,72 @@
+/* Estilos base optimizados */
+:root {
+  --header-height: 80px;
+  --sidebar-width: 280px;
+  --primary-color: #42b883;
+  --secondary-color: #347474;
+  --text-primary: #2c3e50;
+  --text-secondary: #6a8bad;
+  --bg-light: #f9f9f9;
+  --border-color: #eaecef;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
 .docs-container {
-  display: grid;
+  display: flex;
   min-height: 100vh;
   background-color: #ffffff;
   position: relative;
+  will-change: transform;
+  contain: content;
 }
 
 .docs-sidebar {
   position: fixed;
-  width: 280px;
+  width: var(--sidebar-width);
   height: 100vh;
-  background-color: #f9f9f9;
-  border-right: 1px solid #eaecef;
+  background-color: var(--bg-light);
+  border-right: 1px solid var(--border-color);
   padding: 1.5rem;
   overflow-y: auto;
   z-index: 1000;
+  will-change: transform;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-color) var(--bg-light);
+}
+
+/* Estilos para la barra de desplazamiento */
+.docs-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.docs-sidebar::-webkit-scrollbar-track {
+  background: var(--bg-light);
+}
+
+.docs-sidebar::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border-radius: 3px;
 }
 
 .docs-sidebar-header {
@@ -116,9 +169,20 @@
 
 .docs-content {
   padding: 2rem 3rem;
-  margin-left: 280px;
+  margin-left: var(--sidebar-width);
   width: 100%;
-  max-width: calc(100vw - 280px);
+  max-width: calc(100vw - var(--sidebar-width));
+  will-change: transform;
+  contain: content;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  
+  /* Optimización para móviles */
+  @media (max-width: 1024px) {
+    margin-left: 0;
+    max-width: 100%;
+    padding: 1rem;
+  }
 }
 
 .docs-header {
@@ -154,8 +218,31 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  scroll-margin-top: 2rem;
-  animation: fadeIn 0.5s ease-out;
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--border-color);
+  contain: content;
+  will-change: transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Optimización para la carga de imágenes */
+.content-section img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Mejora de rendimiento para dispositivos táctiles */
+@media (hover: none) {
+  .content-section {
+    transform: translateZ(0);
+  }
 }
 
 .content-section h2 {
