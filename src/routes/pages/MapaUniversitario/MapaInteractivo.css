@@ -4,6 +4,8 @@
   display: flex;
   flex-direction: column;
   background: #f5f7fa;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .mapa-header {
@@ -11,20 +13,28 @@
   color: white;
   padding: 1rem 2rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .mapa-header-content {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .logo-circle {
@@ -67,7 +77,7 @@
 .mapa-main {
   flex: 1;
   padding: 2rem;
-  max-width: 1400px;
+  max-width: 1800px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -75,11 +85,19 @@
 
 .mapa-content {
   display: grid;
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 320px;
   gap: 2rem;
   min-height: 500px;
   height: calc(100vh - 200px);
   position: relative;
+  width: 100%;
+}
+
+/* Ajustes para pantallas grandes */
+@media (min-width: 1600px) {
+  .mapa-content {
+    grid-template-columns: 1fr 350px;
+  }
 }
 
 .mapa-interactivo {
@@ -291,44 +309,318 @@
   margin: 0;
 }
 
-/* Estilos para pantallas pequeñas */
-@media (max-width: 992px) {
+/* Estilos para tablets grandes */
+@media (max-width: 1199px) {
+  .mapa-content {
+    grid-template-columns: 1fr 280px;
+  }
+  
+  .mapa-leyenda {
+    padding: 1.2rem;
+  }
+}
+
+/* Estilos para tablets */
+@media (max-width: 991px) {
   .mapa-content {
     grid-template-columns: 1fr;
     height: auto;
     min-height: 0;
+    gap: 1.5rem;
+  }
+  
+  .mapa-main {
+    padding: 1.5rem;
+  }
+  
+  .mapa-interactivo {
+    min-height: 500px;
+    height: 60vh;
+    overflow: visible;
+    padding: 15px;
+  }
+  
+  .mapa-leyenda {
+    margin-top: 1.5rem;
+    height: auto;
+    max-height: 300px;
+  }
+  
+  .hotspot-info {
+    min-width: 220px;
+    font-size: 0.95em;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90%;
+    bottom: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .hotspot-info:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -8px;
+    border-width: 8px;
+    border-style: solid;
+    border-color: white transparent transparent transparent;
+  }
+}
+
+/* Estilos para tablets pequeñas */
+@media (max-width: 767px) {
+  .mapa-main {
+    padding: 1.25rem;
+  }
+  
+  .mapa-header {
+    padding: 0.8rem 1.25rem;
+  }
+  
+  .logo-info h1 {
+    font-size: 1.3rem;
+  }
+  
+  .logo-info span {
+    font-size: 0.85rem;
+  }
+  
+  .back-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .mapa-interactivo {
+    min-height: 450px;
+    height: 55vh;
+  }
+  
+  .mapa-leyenda h3 {
+    font-size: 1.2rem;
+  }
+  
+  .mapa-leyenda li {
+    padding: 0.7rem 0.9rem;
+  }
+}
+
+/* Estilos para móviles medianos (576px - 767px) */
+@media (max-width: 767px) {
+  .mapa-main {
+    padding: 1rem;
   }
   
   .mapa-interactivo {
     min-height: 400px;
-    height: 60vh;
-    overflow: auto;
-  }
-  
-  .mapa-leyenda {
-    margin-top: 2rem;
-    height: 300px;
-  }
-  
-  .hotspot-info {
-    /* Ajustes para móviles */
-    min-width: 200px;
-    font-size: 0.9em;
-    left: 50%;
-    transform: translateX(-50%);
-    max-width: 90%;
-  }
-}
-
-/* Ajustes adicionales para pantallas muy pequeñas */
-@media (max-width: 480px) {
-  .mapa-interactivo {
     height: 50vh;
-    min-height: 300px;
+    padding: 10px;
+    border-radius: 10px;
   }
   
   .hotspot-marker {
     width: 24px;
     height: 24px;
+    font-size: 0.65rem;
+  }
+  
+  .hotspot-info {
+    min-width: 220px;
+    padding: 0.9rem;
+    font-size: 0.9em;
+  }
+  
+  .hotspot-info h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+  }
+  
+  .hotspot-info p {
+    font-size: 0.88rem;
+    margin-bottom: 0.9rem;
+  }
+  
+  .tour-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .mapa-leyenda {
+    padding: 1rem;
+  }
+  
+  .mapa-leyenda h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .mapa-leyenda li {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+  }
+  
+  .leyenda-marker {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+/* Estilos para móviles pequeños (481px - 576px) */
+@media (max-width: 576px) {
+  .mapa-main {
+    padding: 0.75rem;
+  }
+  
+  .mapa-content {
+    gap: 1rem;
+  }
+  
+  .mapa-interactivo {
+    min-height: 350px;
+    height: 45vh;
+    padding: 8px;
+  }
+  
+  .hotspot-marker {
+    width: 22px;
+    height: 22px;
+  }
+  
+  .hotspot-info {
+    min-width: 200px;
+    padding: 0.8rem;
+    font-size: 0.88em;
+  }
+  
+  .hotspot-info h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.3rem;
+  }
+  
+  .hotspot-info p {
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .mapa-leyenda {
+    padding: 0.9rem;
+  }
+  
+  .mapa-leyenda h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .mapa-leyenda li {
+    padding: 0.65rem 0.8rem;
+    font-size: 0.88rem;
+  }
+}
+
+/* Estilos para móviles muy pequeños (hasta 480px) */
+@media (max-width: 480px) {
+  .mapa-main {
+    padding: 0.6rem;
+  }
+  
+  .mapa-interactivo {
+    min-height: 300px;
+    height: 40vh;
+    padding: 6px;
+    border-radius: 8px;
+  }
+  
+  .hotspot-marker {
+    width: 20px;
+    height: 20px;
+    font-size: 0.6rem;
+  }
+  
+  .hotspot-info {
+    min-width: 180px;
+    padding: 0.7rem;
+    font-size: 0.85em;
+  }
+  
+  .hotspot-info h3 {
+    font-size: 1rem;
+  }
+  
+  .hotspot-info p {
+    font-size: 0.82rem;
+    margin-bottom: 0.7rem;
+  }
+  
+  .tour-button {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
+  
+  .mapa-leyenda {
+    padding: 0.8rem;
+  }
+  
+  .mapa-leyenda h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.7rem;
+  }
+  
+  .mapa-leyenda li {
+    padding: 0.6rem 0.7rem;
+    font-size: 0.85rem;
+  }
+  
+  .leyenda-marker {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Estilos para móviles extra pequeños (hasta 360px) */
+@media (max-width: 360px) {
+  .mapa-main {
+    padding: 0.5rem;
+  }
+  
+  .mapa-interactivo {
+    min-height: 280px;
+    height: 38vh;
+  }
+  
+  .hotspot-marker {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .hotspot-info {
+    min-width: 160px;
+    padding: 0.6rem;
+  }
+  
+  .hotspot-info h3 {
+    font-size: 0.95rem;
+  }
+  
+  .hotspot-info p {
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  
+  .tour-button {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  .mapa-leyenda {
+    padding: 0.7rem;
+  }
+  
+  .mapa-leyenda h3 {
+    font-size: 1rem;
+  }
+  
+  .mapa-leyenda li {
+    padding: 0.55rem 0.6rem;
+    font-size: 0.82rem;
   }
 }
