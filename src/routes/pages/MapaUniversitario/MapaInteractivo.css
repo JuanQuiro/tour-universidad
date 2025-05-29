@@ -77,19 +77,24 @@
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 2rem;
+  min-height: 500px;
   height: calc(100vh - 200px);
+  position: relative;
 }
 
 .mapa-interactivo {
   position: relative;
   background: white;
   border-radius: 12px;
-  overflow: hidden;
+  overflow: visible; /* Cambiado de hidden a visible */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   height: 100%;
+  min-height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 20px; /* Espacio para los hotspots */
+  box-sizing: border-box;
 }
 
 .mapa-imagen {
@@ -106,6 +111,8 @@
   z-index: 10;
   transition: all 0.3s ease;
   transform: translate(-50%, -50%);
+  /* Asegura que los hotspots siempre estén sobre la imagen */
+  pointer-events: auto;
 }
 
 .hotspot-marker {
@@ -285,14 +292,43 @@
 }
 
 /* Estilos para pantallas pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .mapa-content {
     grid-template-columns: 1fr;
     height: auto;
+    min-height: 0;
+  }
+  
+  .mapa-interactivo {
+    min-height: 400px;
+    height: 60vh;
+    overflow: auto;
   }
   
   .mapa-leyenda {
     margin-top: 2rem;
     height: 300px;
+  }
+  
+  .hotspot-info {
+    /* Ajustes para móviles */
+    min-width: 200px;
+    font-size: 0.9em;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90%;
+  }
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .mapa-interactivo {
+    height: 50vh;
+    min-height: 300px;
+  }
+  
+  .hotspot-marker {
+    width: 24px;
+    height: 24px;
   }
 }
