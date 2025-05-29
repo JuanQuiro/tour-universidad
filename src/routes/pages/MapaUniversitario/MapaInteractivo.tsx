@@ -73,8 +73,7 @@ const MapaInteractivo = () => {
       <header className="mapa-header">
         <div className="mapa-header-content">
           <div className="logo-container">
-            <div className="logo-circle">
-            </div>
+            
             <div className="logo-info">
               <h1>Mapa Universitario</h1>
               <span>Haz clic en un lugar para más información</span>
