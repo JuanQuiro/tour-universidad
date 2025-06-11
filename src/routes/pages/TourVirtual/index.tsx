@@ -65,64 +65,144 @@ interface SceneConfig {
   hotSpots?: PannellumHotSpot[];
 }
 
-const scenes: SceneConfig[] = [
-  {
-    id: 'entrada',
-    title: 'Entrada Principal',
-    imageSource: 'https://pannellum.org/images/alma.jpg',
-    hotSpots: [
-      {
-        pitch: -2.1,
-        yaw: 132.9,
-        type: 'scene',
-        text: 'Edificio Principal',
-        sceneId: 'edificio-principal',
-      },
-    ],
-  },
-  {
-    id: 'edificio-principal',
-    title: 'Edificio Principal',
-    imageSource: 'https://pannellum.org/images/cerro-toco-0.jpg',
-    hotSpots: [
-      {
-        pitch: 0.3,
-        yaw: 154.4,
-        type: 'scene',
-        text: 'Biblioteca',
-        sceneId: 'biblioteca',
-      },
-      {
-        pitch: -1.1,
-        yaw: -127.7,
-        type: 'scene',
-        text: 'Volver a la Entrada',
-        sceneId: 'entrada',
-      },
-    ],
-  },
-  {
-    id: 'biblioteca',
-    title: 'Biblioteca',
-    imageSource: 'https://pannellum.org/images/trail.jpg',
-    hotSpots: [
-      {
-        pitch: -0.6,
-        yaw: 37.1,
-        type: 'scene',
-        text: 'Volver al Edificio Principal',
-        sceneId: 'edificio-principal',
-      },
-    ],
-  },
+// Mapeo de nombres de archivo a títulos más descriptivos
+const sceneTitles: { [key: string]: string } = {
+  'el-graduando-salida-principal.jpg': 'Entrada Principal - El Graduando',
+  'cafeteria-baños-2.jpg': 'Cafetería - Baños',
+  'cafeteria-baños.jpg': 'Cafetería - Baños (Vista 2)',
+  'cafeteria-comedor-2.jpg': 'Cafetería - Comedor (Vista 2)',
+  'cafeteria-comedor.jpg': 'Cafetería - Comedor',
+  'cafeteria-entrada-desde-un-poco-lejos.jpg': 'Entrada a la Cafetería',
+  'cafeteria-muebles.jpg': 'Cafetería - Área de Muebles',
+  'cafetin-centro.jpg': 'Cafetín del Centro',
+  'fuera-de-caferia.jpg': 'Exterior de la Cafetería',
+  'fuera-de-cafeteria-2.jpg': 'Exterior de la Cafetería (Vista 2)',
+  'fuera-de-cafeteria.jpg': 'Exterior de la Cafetería (Vista 3)',
+  'fuera-de-cafeteria3.jpg': 'Exterior de la Cafetería (Vista 4)',
+  'fuera-de-cafeteria4.jpg': 'Exterior de la Cafetería (Vista 5)',
+  'fuera-de-cafetin.jpg': 'Exterior del Cafetín'
+};
+
+// Obtener todas las imágenes de la carpeta scenes
+const sceneFiles = [
+  'el-graduando-salida-principal.jpg',
+  'cafeteria-entrada-desde-un-poco-lejos.jpg',
+  'cafeteria-comedor.jpg',
+  'cafeteria-comedor-2.jpg',
+  'cafeteria-muebles.jpg',
+  'cafeteria-baños.jpg',
+  'cafeteria-baños-2.jpg',
+  'cafetin-centro.jpg',
+  'fuera-de-cafetin.jpg',
+  'fuera-de-caferia.jpg',
+  'fuera-de-cafeteria.jpg',
+  'fuera-de-cafeteria-2.jpg',
+  'fuera-de-cafeteria3.jpg',
+  'fuera-de-cafeteria4.jpg'
 ];
+
+// Función para generar hotspots entre escenas
+const generateHotspots = (
+  currentIndex: number,
+  total: number,
+  sceneIds: string[]
+): PannellumHotSpot[] => {
+  const hotspots: PannellumHotSpot[] = [];
+  
+  // Hotspot para la escena anterior
+  if (currentIndex > 0) {
+    hotspots.push({
+      pitch: 0,
+      yaw: -90,
+      type: 'scene',
+      text: 'Anterior',
+      sceneId: sceneIds[currentIndex - 1],
+      cssClass: 'custom-hotspot',
+    });
+  }
+  
+  // Hotspot para la escena siguiente
+  if (currentIndex < total - 1) {
+    hotspots.push({
+      pitch: 0,
+      yaw: 90,
+      type: 'scene',
+      text: 'Siguiente',
+      sceneId: sceneIds[currentIndex + 1],
+      cssClass: 'custom-hotspot',
+    });
+  }
+  
+  return hotspots;
+};
+
+// Crear los IDs de las escenas primero
+const sceneIds = sceneFiles.map((filename) => 
+  filename.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9-]/g, '-')
+);
+
+// Crear el arreglo de escenas
+const scenes: SceneConfig[] = sceneFiles.map((filename, index) => {
+  const sceneId = sceneIds[index];
+  
+  return {
+    id: sceneId,
+    title: sceneTitles[filename] || filename.replace(/-/g, ' ').replace(/\.[^/.]+$/, ''),
+    imageSource: `/scenes/${filename}`,
+    hotSpots: generateHotspots(index, sceneFiles.length, sceneIds)
+  };
+});
+
+// Estilos CSS para los hotspots
+const styles = `
+  .custom-hotspot {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .custom-hotspot:hover {
+    background-color: rgba(0, 100, 200, 0.8);
+  }
+  
+  .pnlm-title {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
+    max-width: 80%;
+  }
+`;
+
+// Añadir estilos al documento
+const styleElement = document.createElement('style');
+styleElement.textContent = styles;
+document.head.appendChild(styleElement);
 
 export default function TourVirtual() {
   const [isLoading, setIsLoading] = useState(true);
   const [currentScene, setCurrentScene] = useState(scenes[0].id);
+  const [currentTitle, setCurrentTitle] = useState(scenes[0].title);
   const viewerRef = useRef<ViewerInstance | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const pannellumInitializedRef = useRef(false); // Usamos un ref para rastrear la inicialización
+  const pannellumInitializedRef = useRef(false);
+
+  // Función para manejar el cambio de escena
+  const handleSceneChange = (sceneId: string) => {
+    const scene = scenes.find(s => s.id === sceneId);
+    if (scene) {
+      setCurrentScene(sceneId);
+      setCurrentTitle(scene.title);
+    }
+  };
 
   useEffect(() => {
     // Verificar si Pannellum está disponible
@@ -139,66 +219,101 @@ export default function TourVirtual() {
       return;
     }
 
+    // Asegurarse de que el contenedor esté vacío
+    containerRef.current.innerHTML = '';
+    
+    // Crear un nuevo div para el visor
+    const viewerDiv = document.createElement('div');
+    viewerDiv.id = 'pannellum-container';
+    viewerDiv.style.width = '100%';
+    viewerDiv.style.height = '100%';
+    containerRef.current.appendChild(viewerDiv);
+
+    // Si ya está inicializado, destruir la instancia anterior
+    if (pannellumInitializedRef.current && viewerRef.current) {
+      try {
+        viewerRef.current.destroy();
+      } catch (e) {
+        console.warn('Error al destruir la instancia anterior de Pannellum:', e);
+      }
+    }
+
     // Configuración de Pannellum
     const pannellumOptions: PannellumOptions = {
       default: {
-        firstScene: scenes[0].id,
+        firstScene: currentScene,
         sceneFadeDuration: 1000,
         autoLoad: true,
         compass: true,
         showControls: true,
         showFullscreenCtrl: true,
         showZoomCtrl: true,
+        // Limitar el movimiento vertical
+        minPitch: -30,  // Limitar el movimiento hacia abajo
+        maxPitch: 30,   // Limitar el movimiento hacia arriba
+        // Configuración para fotos 360° sin cubo completo
+        autoRotate: -2, // Rotación automática lenta (opcional)
+        autoRotateInactivityDelay: 3000, // Tiempo antes de que comience la rotación automática
+        autoRotateStopDelay: 3000, // Tiempo que permanece detenida la rotación al interactuar
+        // Mejorar la experiencia de visualización
+        hfov: 100, // Campo de visión horizontal inicial
+        showZoomCtrl: false, // Ocultar controles de zoom ya que no son necesarios
+        mouseZoom: false, // Desactivar zoom con rueda del mouse
+        draggable: true, // Permitir arrastrar para girar
+        disableKeyboardCtrl: false, // Habilitar controles de teclado
+        keyboardZoom: false, // Desactivar zoom con teclado
       },
-      scenes: scenes.reduce((acc, scene) => {
-        acc[scene.id] = {
-          title: scene.title,
-          type: 'equirectangular',
-          panorama: scene.imageSource,
-          hotSpots: scene.hotSpots,
-        };
-        return acc;
-      }, {} as Record<string, PannellumSceneConfig>),
+      scenes: {}
     };
 
+    // Convertir nuestras escenas al formato que espera Pannellum
+    scenes.forEach(scene => {
+      pannellumOptions.scenes![scene.id] = {
+        title: scene.title,
+        type: 'equirectangular',
+        panorama: scene.imageSource,
+        hotSpots: scene.hotSpots
+      };
+    });
+
     try {
-      // Inicializar Pannellum
-      viewerRef.current = window.pannellum.viewer(containerRef.current, pannellumOptions);
+      // Usar el ID del div que acabamos de crear
+      viewerRef.current = window.pannellum.viewer(viewerDiv, pannellumOptions);
       
-      // Configurar manejadores de eventos
+      // Configurar el manejador de cambio de escena
+      viewerRef.current.on('scenechange', (newSceneId: string) => {
+        handleSceneChange(newSceneId);
+      });
+      
+      // Configurar el manejador de carga
       viewerRef.current.on('load', () => {
-        console.log('Pannellum cargado correctamente');
         setIsLoading(false);
       });
-
-      viewerRef.current.on('scenechange', (sceneId: string) => {
-        setCurrentScene(sceneId);
-      });
-
-      // Manejar redimensionamiento
-      const handleResize = () => {
-        if (viewerRef.current && typeof viewerRef.current.resize === 'function') {
-          viewerRef.current.resize();
-        }
-      };
-
-      window.addEventListener('resize', handleResize);
-
-      // Limpieza al desmontar
-      return () => {
-        if (viewerRef.current) {
-          viewerRef.current.destroy();
-          viewerRef.current = null;
-        }
-        window.removeEventListener('resize', handleResize);
-      };
+      
+      pannellumInitializedRef.current = true;
     } catch (error) {
       console.error('Error al inicializar Pannellum:', error);
       setIsLoading(false);
     }
-  }, []);
 
-  // Efecto para manejar el redimensionamiento de la ventana
+    // Cleanup function
+    return () => {
+      if (viewerRef.current) {
+        try {
+          viewerRef.current.destroy();
+        } catch (e) {
+          console.error('Error al destruir Pannellum:', e);
+        }
+        viewerRef.current = null;
+      }
+      
+      // Clear container
+      if (containerRef.current) {
+        containerRef.current.innerHTML = '';
+      }
+    };
+  }, [currentScene]);
+
   useEffect(() => {
     const handleResize = () => {
       if (viewerRef.current && typeof viewerRef.current.resize === 'function') {
@@ -206,24 +321,11 @@ export default function TourVirtual() {
       }
     };
 
-    // Asegurarse de que el contenedor tenga dimensiones válidas
-    const ensureContainerSize = () => {
-      if (containerRef.current) {
-        const { width, height } = containerRef.current.getBoundingClientRect();
-        if (width === 0 || height === 0) {
-          // Forzar un nuevo diseño si las dimensiones son cero
-          containerRef.current.style.width = '100%';
-          containerRef.current.style.height = '100%';
-        }
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
+    // Configurar el observador de redimensionamiento para el contenedor
     const resizeObserver = new ResizeObserver(handleResize);
     
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
-      ensureContainerSize();
     }
 
     // Forzar un redibujado después de que el componente se monte
@@ -233,6 +335,9 @@ export default function TourVirtual() {
 
     return () => {
       window.removeEventListener('resize', handleResize);
+      if (containerRef.current) {
+        resizeObserver.unobserve(containerRef.current);
+      }
       resizeObserver.disconnect();
       clearTimeout(timer);
     };
